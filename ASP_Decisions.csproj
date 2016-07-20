@@ -219,11 +219,17 @@
     <Compile Include="Migrations\201607172250090_Initial.Designer.cs">
       <DependentUpon>201607172250090_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201607192248520_CommentsAdded.cs" />
+    <Compile Include="Migrations\201607192248520_CommentsAdded.Designer.cs">
+      <DependentUpon>201607192248520_CommentsAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\DbContext.cs" />
     <Compile Include="Models\DecisionDb.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ViewModels\DecisionDetailsViewModel.cs" />
     <Compile Include="Models\ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\ViewModels\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -305,11 +311,12 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Decision\Details.cshtml" />
+    <Content Include="Views\Decision\Details_old.cshtml" />
     <Content Include="Views\Shared\_LoginPartial1.cshtml" />
     <Content Include="Views\Decision\Index.cshtml" />
     <Content Include="Views\Decision\Delete.cshtml" />
     <Content Include="Views\Decision\Edit.cshtml" />
+    <Content Include="Views\Decision\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -325,6 +332,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201607172250090_Initial.resx">
       <DependentUpon>201607172250090_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607192248520_CommentsAdded.resx">
+      <DependentUpon>201607192248520_CommentsAdded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

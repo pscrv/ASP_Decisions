@@ -84,40 +84,5 @@ namespace ASP_Decisions.Models
         public string Facts { get; set; } = "";
         public string Reasons { get; set; } = "";
         public string Order { get; set; } = "";
-    }
-
-
-    //public class DecisionDbContext : DbContext
-    //{
-    //    public DbSet<Decision> Decisions { get; set; }
-
-    //    public void AddOrUpdate(Decision decision, bool forceUpdate = false)
-    //    {
-    //        Decision inDB = this.Decisions.FirstOrDefault(
-    //                   dec => dec.CaseNumber == decision.CaseNumber
-    //                           && dec.DecisionLanguage == decision.DecisionLanguage);
-
-    //        bool mustAdd = inDB == null || forceUpdate;
-
-    //        if (mustAdd)
-    //        {
-    //            this.Decisions.Add(decision);
-    //            if (inDB != null)
-    //                this.Decisions.Remove(inDB);
-    //            this.SaveChanges();               
-    //        }
-    //    }
-
-    //    public void Save(Decision decision)
-    //    {
-    //        Decision inDB = this.Decisions.FirstOrDefault(dec => dec.Id == decision.Id);
-
-    //        if (inDB == null)
-    //        {
-    //            this.Decisions.Add(decision);
-    //        }
-
-    //        this.SaveChanges();
-    //    }
-    //}
+    } 
 }

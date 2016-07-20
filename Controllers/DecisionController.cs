@@ -1,5 +1,6 @@
 ﻿using ASP_Decisions.Epo_facade;
 using ASP_Decisions.Models;
+using ASP_Decisions.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -37,7 +38,7 @@ namespace ASP_Decisions.Controllers
             List<Decision> citedDecisions = new List<Decision>();
             if (decision.CitedCases != null && decision.CitedCases != "")
                 citedDecisions = await _getCited(decision);
-            ViewBag.CitedDecisions = citedDecisions;
+            //ViewBag.CitedDecisions = citedDecisions;
 
             if (!decision.TextDownloaded)
             {
@@ -45,11 +46,31 @@ namespace ASP_Decisions.Controllers
                 db.SaveChanges();
             }
 
-            ViewBag.Facts = decision.Facts.Split(new string[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries);
-            ViewBag.Reasons = decision.Reasons.Split(new string[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries);
-            ViewBag.Order = decision.Order.Split(new string[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries);
+            //ViewBag.Facts = decision.Facts.Split(new string[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries);
+            //ViewBag.Reasons = decision.Reasons.Split(new string[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries);
+            //ViewBag.Order = decision.Order.Split(new string[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries);
 
-            return View(decision);
+            // The following, up to the next comment
+            // has been added to see if it workds
+
+            List<Comment> comments = db.Comments.ToList().Where(c => c.Decision == decision).OrderByDescending(c => c.DateSubmitted).ToList();
+
+            DecisionDetailsViewModel ddvm = new DecisionDetailsViewModel
+            {
+                Comments = comments,
+                Decision = decision,
+                CitedDecisions = citedDecisions,
+                Facts = decision.Facts.Split(new string[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries),
+                Reasons = decision.Reasons.Split(new string[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries),
+                Order = decision.Order.Split(new string[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries),
+            };
+
+            return View(ddvm);
+            // end of added content
+
+
+
+            //return View(decision);
         }
         
         // GET: Decisions/Edit/5

@@ -25,6 +25,8 @@ namespace ASP_Decisions.Models
         public DbSet<ASP_Decisions.Models.ApplicationRole> IdentityRoles { get; set; }
 
         public DbSet<Decision> Decisions { get; set; }
+
+        public DbSet<Comment> Comments { get; set; }
         #endregion
 
 
