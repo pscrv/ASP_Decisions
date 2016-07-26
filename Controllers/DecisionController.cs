@@ -1,6 +1,8 @@
 ﻿using ASP_Decisions.Epo_facade;
 using ASP_Decisions.Models;
 using ASP_Decisions.Models.ViewModels;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -13,12 +15,10 @@ namespace ASP_Decisions.Controllers
 {
     public class DecisionController : BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
         // GET: Decisions
         public ActionResult Index()
         {
-            return View(db.Decisions.ToList());
+            return View(_db.Decisions.ToList());
         }
 
         // GET: Decisions/Details/5
@@ -29,7 +29,7 @@ namespace ASP_Decisions.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Decision decision = db.Decisions.Find(id);
+            Decision decision = _db.Decisions.Find(id);
             if (decision == null)
             {
                 return HttpNotFound();
@@ -43,34 +43,28 @@ namespace ASP_Decisions.Controllers
             if (!decision.TextDownloaded)
             {
                 EpoSearch.GetDecisionText(decision);
-                db.SaveChanges();
-            }
-
-            //ViewBag.Facts = decision.Facts.Split(new string[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries);
-            //ViewBag.Reasons = decision.Reasons.Split(new string[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries);
-            //ViewBag.Order = decision.Order.Split(new string[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries);
-
-            // The following, up to the next comment
-            // has been added to see if it workds
-
-            List<Comment> comments = db.Comments.ToList().Where(c => c.Decision == decision).OrderByDescending(c => c.DateSubmitted).ToList();
+                _db.SaveChanges();
+            }            
+            
+            List<Comment> comments = _db.Comments.ToList()
+                .Where
+                    (c => c.CaseNumber == decision.CaseNumber
+                        &&  ( c.IsAccepted || c.Author == _applicationUser )
+                    )
+                .OrderByDescending(c => c.DateSubmitted)
+                .ToList();
 
             DecisionDetailsViewModel ddvm = new DecisionDetailsViewModel
             {
-                Comments = comments,
                 Decision = decision,
                 CitedDecisions = citedDecisions,
                 Facts = decision.Facts.Split(new string[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries),
                 Reasons = decision.Reasons.Split(new string[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries),
                 Order = decision.Order.Split(new string[] { "\n\n" }, StringSplitOptions.RemoveEmptyEntries),
+                Comments = comments,
             };
 
             return View(ddvm);
-            // end of added content
-
-
-
-            //return View(decision);
         }
         
         // GET: Decisions/Edit/5
@@ -80,7 +74,7 @@ namespace ASP_Decisions.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Decision decision = db.Decisions.Find(id);
+            Decision decision = _db.Decisions.Find(id);
             if (decision == null)
             {
                 return HttpNotFound();
@@ -97,8 +91,8 @@ namespace ASP_Decisions.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(decision).State = EntityState.Modified;
-                db.SaveChanges();
+                _db.Entry(decision).State = EntityState.Modified;
+                _db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(decision);
@@ -111,7 +105,7 @@ namespace ASP_Decisions.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Decision decision = db.Decisions.Find(id);
+            Decision decision = _db.Decisions.Find(id);
             if (decision == null)
             {
                 return HttpNotFound();
@@ -124,22 +118,12 @@ namespace ASP_Decisions.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Decision decision = db.Decisions.Find(id);
-            db.Decisions.Remove(decision);
-            db.SaveChanges();
+            Decision decision = _db.Decisions.Find(id);
+            _db.Decisions.Remove(decision);
+            _db.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        #region IDisposable
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-        #endregion
 
         #region helper methods
         private async Task<List<Decision>> _getCited(Decision decision)
@@ -149,7 +133,7 @@ namespace ASP_Decisions.Controllers
             foreach (string cited in decision.CitedCases.Split(','))
             {
                 string ctd = cited.Trim();
-                Decision inDB = db.Decisions.FirstOrDefault(
+                Decision inDB = _db.Decisions.FirstOrDefault(
                     dec => dec.CaseNumber == ctd
                             && dec.DecisionLanguage == dec.ProcedureLanguage);
 
@@ -174,7 +158,7 @@ namespace ASP_Decisions.Controllers
                     bool added = false;
                     foreach (Decision dec in fromEPO)
                     {
-                        db.AddOrUpdate(dec);
+                        _db.AddOrUpdate(dec);
                         if (dec.DecisionLanguage == dec.ProcedureLanguage && !added)
                         {
                             citedDecisions.Add(dec);
@@ -187,6 +171,13 @@ namespace ASP_Decisions.Controllers
             }
 
             return citedDecisions;
+        }
+        #endregion
+
+        #region IDisposable
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
         }
         #endregion
 

@@ -1,4 +1,5 @@
 ﻿@model ASP_Decisions.Models.ViewModels.DecisionDetailsViewModel
+@using ASP_Decisions.Models;
 
 @{
     ViewBag.Title = "Details";
@@ -6,8 +7,9 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-sm-4" id="bibl-display-parent">
-            <div class="bibl-display" id="bibl-display-div" data-spy="affix">
+        <div class="col-md-4" id="bibl-display-parent">
+            @*<div class="bibl-display" id="bibl-display-div" data-spy="affix">*@
+            <div class="bibl-display" id="bibl-display-div">
                 <h1 class="casenumber"> @Html.DisplayFor(model => model.Decision.CaseNumber) </h1>
                 <p class="headword"> @Html.DisplayFor(model => model.Decision.Headword) </p>
                 <p class="ECLI"> @Html.DisplayFor(model => model.Decision.Ecli) </p>
@@ -30,7 +32,6 @@
                 { <p class="articles+rules"> Article(s) @Html.DisplayFor(model => model.Decision.Articles) </p> }
                 @if (Model.Decision.Rules != "")
                 { <p class="articles+rules"> Rules: @Html.DisplayFor(model => model.Decision.Rules) </p> }
-                @*<p class="keywords">*@
                 @if (Model.CitedDecisions.Count > 0)
                 {
                     <p>
@@ -45,10 +46,8 @@
                 }
             </div>
         </div>
-
-
-
-        <div class="col-sm-8">
+        
+        <div class="col-md-8">
             <ul class="nav nav-tabs">
                 <li><a data-toggle="tab" href="#procedure">Procedure</a></li>
                 <li class="active"><a data-toggle="tab" href="#reasons">Reasons</a></li>
@@ -73,13 +72,31 @@
                     { <p> @para </p> }
                 </div>
                 <div id="comments" class="tab-pane fade">
-                    <h4> Comments </h4>
-                    <p> There might be comments, one day. </p>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="@Url.Action("AddComment", "Comments", new { caseNumber = Model.Decision.CaseNumber }, null)" class="btn btn-success">
+                                    Add comment
+                                    <span class="glyphicon glyphicon-plus-sign"></span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @foreach (var comment in Model.Comments)
+                                {
+                                    if (comment != null)
+                                    {
+                                            <text>
+                                                @Html.Partial("~/Views/Comments/Comment.cshtml", comment)
+                                            </text>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-
-
         </div>
     </div>
 </div>

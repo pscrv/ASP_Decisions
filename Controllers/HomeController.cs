@@ -10,8 +10,6 @@ namespace ASP_Decisions.Controllers
 {
     public class HomeController : BaseController
     {
-        private ApplicationDbContext _dbContext = new ApplicationDbContext();
-
         [AllowAnonymous]
         public async Task<ActionResult> Index()
         {
@@ -29,7 +27,7 @@ namespace ASP_Decisions.Controllers
 
             await Epo_facade.DailyUpdate.TryUpdate();
 
-            List<Decision> decisions = _dbContext.Decisions
+            List<Decision> decisions = _db.Decisions
                 .OrderByDescending(d => d.OnlineDate)
                 .Take(10)
                 .ToList();
@@ -47,9 +45,9 @@ namespace ASP_Decisions.Controllers
                 countDictionary[str] = _countType(str);
 
             _Counts_ all = new _Counts_();
-            all.Total = _dbContext.Decisions.Count();
-            all.WithMeta = _dbContext.Decisions.Count(dec => dec.MetaDownloaded);
-            all.WithText = _dbContext.Decisions.Count(dec => dec.TextDownloaded);
+            all.Total = _db.Decisions.Count();
+            all.WithMeta = _db.Decisions.Count(dec => dec.MetaDownloaded);
+            all.WithText = _db.Decisions.Count(dec => dec.TextDownloaded);
             countDictionary["All"] = all;
 
             ViewBag.CountDictionary = countDictionary;
@@ -69,11 +67,11 @@ namespace ASP_Decisions.Controllers
         {
             _Counts_ result = new _Counts_();
             
-            result.Total = _dbContext.Decisions.Count(dec => dec.CaseNumber.StartsWith(start));
-            result.WithMeta = _dbContext.Decisions.Count(
+            result.Total = _db.Decisions.Count(dec => dec.CaseNumber.StartsWith(start));
+            result.WithMeta = _db.Decisions.Count(
                 dec => dec.CaseNumber.StartsWith(start)
                 && dec.MetaDownloaded);
-            result.WithText = _dbContext.Decisions.Count(
+            result.WithText = _db.Decisions.Count(
                 dec => dec.CaseNumber.StartsWith(start)
                 && dec.TextDownloaded);
 
@@ -87,6 +85,14 @@ namespace ASP_Decisions.Controllers
             public int Total;
             public int WithMeta;
             public int WithText;
+        }
+        #endregion
+
+
+        #region IDisposable
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
         }
         #endregion
     }

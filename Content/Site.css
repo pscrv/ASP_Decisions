@@ -20,5 +20,15 @@
 input,
 select,
 textarea {
-    max-width: 280px;
+    width: 100%;
 }
+
+.long-text{
+    width: 500px;
+}
+
+
+
+
+
+

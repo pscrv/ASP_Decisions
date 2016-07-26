@@ -7,13 +7,13 @@ namespace ASP_Decisions.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class CommentsAdded : IMigrationMetadata
+    public sealed partial class CommentRefersToCaseNumber : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(CommentsAdded));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(CommentRefersToCaseNumber));
         
         string IMigrationMetadata.Id
         {
-            get { return "201607192248520_CommentsAdded"; }
+            get { return "201607212311309_CommentRefersToCaseNumber"; }
         }
         
         string IMigrationMetadata.Source

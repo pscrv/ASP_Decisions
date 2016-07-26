@@ -15,7 +15,7 @@ namespace ASP_Decisions.Controllers
     public class AccountController : BaseController
     {
         private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
+        new private ApplicationUserManager _userManager;
 
         public AccountController()
         {
@@ -404,25 +404,6 @@ namespace ASP_Decisions.Controllers
             return View();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (_userManager != null)
-                {
-                    _userManager.Dispose();
-                    _userManager = null;
-                }
-
-                if (_signInManager != null)
-                {
-                    _signInManager.Dispose();
-                    _signInManager = null;
-                }
-            }
-
-            base.Dispose(disposing);
-        }
 
         #region Helpers
         // Used for XSRF protection when adding external logins
@@ -482,5 +463,27 @@ namespace ASP_Decisions.Controllers
             }
         }
         #endregion
+
+        #region IDisposable
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_userManager != null)
+                {
+                    _userManager.Dispose();
+                    _userManager = null;
+                }
+
+                if (_signInManager != null)
+                {
+                    _signInManager.Dispose();
+                    _signInManager = null;
+                }
+            }
+
+            base.Dispose(disposing);
+            #endregion
+        }
     }
 }

@@ -13,5 +13,13 @@ namespace ASP_Decisions.Controllers
         {
             return View();
         }
+
+
+        #region IDisposable
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+        }
+        #endregion
     }
 }

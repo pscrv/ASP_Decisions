@@ -1,0 +1,30 @@
+﻿@model ASP_Decisions.Models.Comment
+
+<div class="well well-sm col-md-8">
+    <p> 
+        @Html.DisplayTextFor(model => model.Author.UserName)
+        |
+        @Html.DisplayTextFor(model => model.DateSubmitted)
+    </p>
+    
+        @if (User.Identity.Name == Model.Author.UserName)
+        {
+            <p>
+                @Html.ActionLink("Edit", "Edit", "Comments", new { id = Model.Id }, null)
+                |
+                @Html.ActionLink("Delete", "Delete", "Comments", new { id = Model.Id }, null)
+               
+                @if (!Model.IsAccepted)
+                {
+                    <text> | <span class="text-warning">(Awaiting approval. Not yet available to the public) </span> </text>
+                }
+        </p>
+    }
+
+
+    <p> @Html.DisplayTextFor(model => model.Text) </p>
+</div>
+   
+@*<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) 
+</p>*@

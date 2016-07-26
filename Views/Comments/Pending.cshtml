@@ -1,0 +1,7 @@
+﻿@model IEnumerable<ASP_Decisions.Models.Comment>
+
+@foreach (var comment in Model)
+{
+    @Html.Partial("CheckComment", comment)
+}
+

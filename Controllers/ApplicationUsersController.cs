@@ -16,22 +16,16 @@ namespace ASP_Decisions.Controllers
     public class ApplicationUsersController : BaseController
     {
         #region private
-        private ApplicationDbContext db;
-        private UserStore<ApplicationUser> userStore;
-        private RoleStore<ApplicationRole> roleStore;
-        private UserManager<ApplicationUser> userManager;
-        private RoleManager<ApplicationRole> roleManager;
+        private RoleStore<ApplicationRole> _roleStore;
+        private RoleManager<ApplicationRole> _roleManager;
         #endregion
 
         #region constructors
         public ApplicationUsersController()
             : base()
         {
-            db = new ApplicationDbContext();
-            userStore = new UserStore<ApplicationUser>(db);
-            roleStore = new RoleStore<ApplicationRole>(db);
-            userManager = new UserManager<ApplicationUser>(userStore);
-            roleManager = new RoleManager<ApplicationRole>(roleStore);
+            _roleStore = new RoleStore<ApplicationRole>(_db);
+            _roleManager = new RoleManager<ApplicationRole>(_roleStore);
         }
         #endregion
 
@@ -39,7 +33,7 @@ namespace ASP_Decisions.Controllers
         // GET: ApplicationUsers
         public ActionResult Index()
         {
-            return View(db.Users.ToList());
+            return View(_db.Users.ToList());
         }
 
         // GET: ApplicationUsers/Details/5
@@ -49,17 +43,18 @@ namespace ASP_Decisions.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicationUser applicationUser = db.Users.Find(id);
-            if (applicationUser == null)
+
+            ApplicationUser user = _userManager.FindById(id);
+
+
+            if (user == null)
             {
                 return HttpNotFound();
             }
+            
+            ViewBag.Roles = _userManager.GetRoles(id).ToList();
 
-            var userStore = new UserStore<ApplicationUser>(db);
-            var userManager = new UserManager<ApplicationUser>(userStore);
-            ViewBag.Roles = userManager.GetRoles(id).ToList();
-
-            return View(applicationUser);
+            return View(user);
         }
 
          // GET: ApplicationUsers/Edit/5
@@ -69,22 +64,21 @@ namespace ASP_Decisions.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicationUser applicationUser = db.Users.Find(id);
-            if (applicationUser == null)
+            if (_applicationUser == null)
             {
                 return HttpNotFound();
             }
 
-            string role = userManager.GetRoles(applicationUser.Id).First();
-            SelectList possibleRoles = new SelectList(roleManager.Roles.Select(x => x.Name).ToList(), role);
+            string role = _userManager.GetRoles(_applicationUser.Id).First();
+            SelectList possibleRoles = new SelectList(_roleManager.Roles.Select(x => x.Name).ToList(), role);
             EditUserViewModel evm = new EditUserViewModel
             {
-                Id                  = applicationUser.Id,
-                UserName            = applicationUser.UserName,
-                Email               = applicationUser.Email,
-                PhoneNumber         = applicationUser.PhoneNumber,
-                TwoFactorEnabled    = applicationUser.TwoFactorEnabled,
-                LockoutEnabled      = applicationUser.LockoutEnabled,
+                Id                  = _applicationUser.Id,
+                UserName            = _applicationUser.UserName,
+                Email               = _applicationUser.Email,
+                PhoneNumber         = _applicationUser.PhoneNumber,
+                TwoFactorEnabled    = _applicationUser.TwoFactorEnabled,
+                LockoutEnabled      = _applicationUser.LockoutEnabled,
                 Role                = role,
                 PossibleRoles       = possibleRoles
             };
@@ -101,22 +95,19 @@ namespace ASP_Decisions.Controllers
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser user = db.Users.Find(userVM.Id);
+                ApplicationUser user = _db.Users.Find(userVM.Id);
                 user.UserName = userVM.UserName;
                 user.Email = userVM.Email;
                 user.PhoneNumber = userVM.PhoneNumber;
                 user.TwoFactorEnabled = userVM.TwoFactorEnabled;
                 user.LockoutEnabled = userVM.LockoutEnabled;
-
-
-                var userStore = new UserStore<ApplicationUser>(db);
-                var userManager = new UserManager<ApplicationUser>(userStore);
-                userManager.RemoveFromRoles(user.Id, userManager.GetRoles(user.Id).ToArray());
-                userManager.AddToRole(user.Id, userVM.Role);
+                
+                _userManager.RemoveFromRoles(user.Id, _userManager.GetRoles(user.Id).ToArray());
+                _userManager.AddToRole(user.Id, userVM.Role);
                 
 
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
+                _db.Entry(user).State = EntityState.Modified;
+                _db.SaveChanges();
                 return RedirectToAction("Details", new { id = user.Id });
             }
             return View(userVM);
@@ -129,12 +120,12 @@ namespace ASP_Decisions.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicationUser applicationUser = db.Users.Find(id);
-            if (applicationUser == null)
+
+            if (_applicationUser == null)
             {
                 return HttpNotFound();
             }
-            return View(applicationUser);
+            return View(_applicationUser);
         }
 
         // POST: ApplicationUsers/Delete/5
@@ -142,9 +133,9 @@ namespace ASP_Decisions.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            ApplicationUser applicationUser = db.Users.Find(id);
-            db.Users.Remove(applicationUser);
-            db.SaveChanges();
+            ApplicationUser applicationUser = _db.Users.Find(id);
+            _db.Users.Remove(applicationUser);
+            _db.SaveChanges();
             return RedirectToAction("Index");
         }
         #endregion
@@ -154,12 +145,8 @@ namespace ASP_Decisions.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
-                userManager.Dispose();
-                roleManager.Dispose();
-                userStore.Dispose();
-                roleStore.Dispose();
-
+                _roleManager.Dispose();
+                _roleStore.Dispose();
             }
             base.Dispose(disposing);
         }

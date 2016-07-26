@@ -1,0 +1,28 @@
+﻿@model ASP_Decisions.Models.Comment
+
+<div class="well well-sm col-md-8">
+    <p>
+        @Html.DisplayTextFor(model => model.Author.UserName)
+        |
+        @Html.DisplayTextFor(model => model.DateSubmitted)
+    </p>
+
+    <p> @Html.DisplayTextFor(model => model.Text) </p>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Id)
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-1">
+                <input type="submit" class="btn btn-success" value="Approve" name="SubmitButton" />
+            </div>
+            <div class="col-md-offset-2 col-md-1">
+                <input type="submit" class="btn btn-default" value="Reject" name="SubmitButton" />
+            </div>
+        </div>
+    }
+
+
+</div>
+

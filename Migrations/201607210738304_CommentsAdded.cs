@@ -12,16 +12,17 @@ namespace ASP_Decisions.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
+                        Text = c.String(nullable: false),
+                        DateSubmitted = c.DateTime(nullable: false),
+                        DatePublished = c.DateTime(),
                         IsAccepted = c.Boolean(nullable: false),
                         IsChecked = c.Boolean(nullable: false),
-                        DateSubmitted = c.DateTime(nullable: false),
-                        DatePublished = c.DateTime(nullable: false),
-                        Author_Id = c.String(maxLength: 128),
-                        Decision_Id = c.Int(),
+                        Author_Id = c.String(nullable: false, maxLength: 128),
+                        Decision_Id = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.Author_Id)
-                .ForeignKey("dbo.Decisions", t => t.Decision_Id)
+                .ForeignKey("dbo.AspNetUsers", t => t.Author_Id, cascadeDelete: true)
+                .ForeignKey("dbo.Decisions", t => t.Decision_Id, cascadeDelete: true)
                 .Index(t => t.Author_Id)
                 .Index(t => t.Decision_Id);
             

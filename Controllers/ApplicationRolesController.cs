@@ -13,12 +13,10 @@ namespace ASP_Decisions.Controllers
 {
     public class ApplicationRolesController : BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
         // GET: ApplicationRoles
         public async Task<ActionResult> Index()
         {
-            return View(await db.IdentityRoles.ToListAsync());
+            return View(await _db.IdentityRoles.ToListAsync());
         }
 
         // GET: ApplicationRoles/Details/5
@@ -28,7 +26,7 @@ namespace ASP_Decisions.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicationRole applicationRole = await db.IdentityRoles.FindAsync(id);
+            ApplicationRole applicationRole = await _db.IdentityRoles.FindAsync(id);
             if (applicationRole == null)
             {
                 return HttpNotFound();
@@ -51,8 +49,8 @@ namespace ASP_Decisions.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.IdentityRoles.Add(applicationRole);
-                await db.SaveChangesAsync();
+                _db.IdentityRoles.Add(applicationRole);
+                await _db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
@@ -66,7 +64,7 @@ namespace ASP_Decisions.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicationRole applicationRole = await db.IdentityRoles.FindAsync(id);
+            ApplicationRole applicationRole = await _db.IdentityRoles.FindAsync(id);
             if (applicationRole == null)
             {
                 return HttpNotFound();
@@ -83,8 +81,8 @@ namespace ASP_Decisions.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(applicationRole).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                _db.Entry(applicationRole).State = EntityState.Modified;
+                await _db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(applicationRole);
@@ -97,7 +95,7 @@ namespace ASP_Decisions.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicationRole applicationRole = await db.IdentityRoles.FindAsync(id);
+            ApplicationRole applicationRole = await _db.IdentityRoles.FindAsync(id);
             if (applicationRole == null)
             {
                 return HttpNotFound();
@@ -110,18 +108,14 @@ namespace ASP_Decisions.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
-            ApplicationRole applicationRole = await db.IdentityRoles.FindAsync(id);
-            db.IdentityRoles.Remove(applicationRole);
-            await db.SaveChangesAsync();
+            ApplicationRole applicationRole = await _db.IdentityRoles.FindAsync(id);
+            _db.IdentityRoles.Remove(applicationRole);
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
             base.Dispose(disposing);
         }
     }

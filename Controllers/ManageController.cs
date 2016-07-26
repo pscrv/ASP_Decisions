@@ -13,7 +13,7 @@ namespace ASP_Decisions.Controllers
     public class ManageController : BaseController
     {
         private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
+        new private ApplicationUserManager _userManager;
 
         public ManageController()
         {
@@ -349,18 +349,8 @@ namespace ASP_Decisions.Controllers
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && _userManager != null)
-            {
-                _userManager.Dispose();
-                _userManager = null;
-            }
 
-            base.Dispose(disposing);
-        }
-
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -410,7 +400,19 @@ namespace ASP_Decisions.Controllers
             RemovePhoneSuccess,
             Error
         }
+        #endregion
 
-#endregion
+        #region IDisposable
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && _userManager != null)
+            {
+                _userManager.Dispose();
+                _userManager = null;
+            }
+
+            base.Dispose(disposing);
+        }
+        #endregion
     }
 }
