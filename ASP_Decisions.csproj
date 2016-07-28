@@ -208,9 +208,12 @@
     <Compile Include="Controllers\DecisionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Epo_facade\DailyUpdate.cs" />
     <Compile Include="Epo_facade\EpoSearch.cs" />
     <Compile Include="Epo_facade\EpoXML_Classes.cs" />
+    <Compile Include="Extensions\ExtensionMethods.cs" />
+    <Compile Include="Formatter\Formatters.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -237,6 +240,7 @@
     <Compile Include="Models\ViewModels\CommentViewModels.cs" />
     <Compile Include="Models\ViewModels\DecisionDetailsViewModel.cs" />
     <Compile Include="Models\ViewModels\ManageViewModels.cs" />
+    <Compile Include="Models\ViewModels\SearchViewModels.cs" />
     <Compile Include="Models\ViewModels\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\LocalAndRemoteSearch.cs" />
@@ -281,9 +285,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\__About__.cshtml" />
-    <Content Include="Views\Home\__Contact__.cshtml" />
-    <Content Include="Views\Home\__Index__.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
@@ -303,7 +304,6 @@
     <Content Include="Views\Manage\SetPassword.cshtml" />
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
-    <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\ApplicationUsers\Delete.cshtml" />
     <Content Include="Views\ApplicationUsers\Details.cshtml" />
     <Content Include="Views\ApplicationUsers\Edit.cshtml" />
@@ -318,7 +318,7 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Decision\Details_old.cshtml" />
-    <Content Include="Views\Shared\_LoginPartial1.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Decision\Index.cshtml" />
     <Content Include="Views\Decision\Delete.cshtml" />
     <Content Include="Views\Decision\Edit.cshtml" />
@@ -331,6 +331,9 @@
     <Content Include="Views\Comments\Index.cshtml" />
     <Content Include="Views\Comments\Pending.cshtml" />
     <Content Include="Views\Comments\CheckComment.cshtml" />
+    <Content Include="Views\Search\BasicSearch.cshtml" />
+    <Content Include="Views\Search\BasicSearchResult.cshtml" />
+    <Content Include="Views\Shared\_DecisionSimple.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

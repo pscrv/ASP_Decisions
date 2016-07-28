@@ -1,4 +1,4 @@
-﻿@model  List<ASP_Decisions.Models.Decision>
+﻿@model  IEnumerable<ASP_Decisions.Models.Decision>
 
 
 <h3> The latest decisions </h3>
@@ -7,29 +7,19 @@
 
     @foreach (var dec in Model)
     {        
-        <a href=@Url.Action("Details", "Decision", new { id = dec.Id })>     
-            <div class="row well well-sm">
-                <div class="col-sm-2">
-                    @dec.CaseNumber
-                </div>
-                <div class="col-sm-1">
-                    @dec.Board
-                </div>
-                <div class="col-sm-7">
-                    @dec.Title
-                </div>
-            </div>
-        </a>
+        @Html.Partial("_DecisionSimple", dec)
     }
 </div>
 
 
 <div class="col-sm-3">
-    <form class="form-inline">
-        <div class="form-group">
-            <label class="sr-only" for="caseNumber">Case Number</label>
-            <input type="text" class="form-control" id="caseNumber" name="caseNumber" placeholder="Case Number">
-        </div>
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
+    <div class="row pull-right">
+        <form class="form-inline">
+            <div class="form-group">
+                <label class="sr-only" for="caseNumber">Case Number</label>
+                <input type="text" class="form-control" id="caseNumber" name="caseNumber" placeholder="Case Number">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
 </div>

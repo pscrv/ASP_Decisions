@@ -13,11 +13,13 @@ namespace ASP_Decisions.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Index()
         {
-            string searchTerm = Request["caseNumber"];
+            string searchCaseNumber = Request["caseNumber"];
 
-            if (!string.IsNullOrEmpty(searchTerm))
+            // There is something to search
+            // Get it, or return home if nothing is found
+            if (!string.IsNullOrEmpty(searchCaseNumber))
             {
-                Decision decision = LocalAndRemoteSearch.SearchCaseNumber(searchTerm);
+                Decision decision = LocalAndRemoteSearch.SearchCaseNumber(searchCaseNumber);
                 if (decision == null)
                     return RedirectToAction("Index", "Home");
                 else
@@ -25,6 +27,7 @@ namespace ASP_Decisions.Controllers
             }
 
 
+            // No search, so try the daily update, then show the most recent ten decisions
             await Epo_facade.DailyUpdate.TryUpdate();
 
             List<Decision> decisions = _db.Decisions

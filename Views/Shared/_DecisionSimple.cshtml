@@ -1,0 +1,18 @@
+﻿@model ASP_Decisions.Models.Decision
+
+<a href=@Url.Action("Details", "decision", new { id = Model.Id })>
+    <div class="row well well-sm">
+        <div class="col-sm-2">
+            @Model.CaseNumber
+        </div>
+        <div class="col-sm-3">
+            @Model.Headword
+        </div>
+        <div class="col-sm-6">
+            @Model.Title
+        </div>
+        <div class="col-sm-1">
+            @Model.DecisionLanguage
+        </div>
+    </div>
+</a>

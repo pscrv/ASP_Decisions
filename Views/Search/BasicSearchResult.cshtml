@@ -1,0 +1,17 @@
+﻿@model  IEnumerable<ASP_Decisions.Models.Decision>
+
+
+<h3> The results of your search </h3>
+<p> @Model.Count() decisions </p>
+
+<div class="col-sm-8">
+
+    @foreach (var dec in Model)
+    {
+        @Html.Partial("_DecisionSimple", dec)
+    }
+</div>
+
+
+
+

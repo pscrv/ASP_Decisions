@@ -26,18 +26,21 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Basic Search", "BasicSearch", "Search")</li>
                 </ul>
-                @Html.Partial("_LoginPartial1")
+                @Html.Partial("_LoginPartial")
             </div>
         </div>
     </div>
     <div class="container body-content">
+
         @RenderBody()
+        
         <footer class="pull-right">
-            <p>&copy; @DateTime.Now.Year - Decision Viewer </p>
+            <p> Decision data copyright European Patent Organisation </p>
+            <p> Presentation &copy AMBA 2016 </p>
         </footer>
     </div>
 

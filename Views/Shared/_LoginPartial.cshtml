@@ -1,11 +1,24 @@
-﻿@using Microsoft.AspNet.Identity
-@if (Request.IsAuthenticated)
+﻿@using Microsoft.AspNet.Identity;
+
+@{ 
+    var isLoggedIn = Request.IsAuthenticated;
+    var isAdmin = User.IsInRole("admin");
+}
+
+
+@if (isLoggedIn)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
     @Html.AntiForgeryToken()
 
     <ul class="nav navbar-nav navbar-right">
+        @if (isAdmin)
+        {
+            <li>
+                @Html.ActionLink("Admin page", "Index", "Admin")
+            </li>
+        }
         <li>
             @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
         </li>

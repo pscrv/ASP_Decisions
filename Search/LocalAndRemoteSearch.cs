@@ -1,4 +1,5 @@
 ﻿using ASP_Decisions.Epo_facade;
+using ASP_Decisions.Formatters;
 using ASP_Decisions.Models;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace ASP_Decisions.Search
             if (cn.Trim().Length < 4) // too short to be real
                 return null;
 
-            cn = FormatCaseNumber(cn);
+            cn = Formatter.FormatCaseNumber(cn);
 
             
             Decision decision;
@@ -64,30 +65,30 @@ namespace ASP_Decisions.Search
             return decision;
         }
 
-        public static string FormatCaseNumber(string cn)
-        {
-            string search = cn.Trim().ToUpper();
-            if (search == "")
-                return cn;  // nothing there, send it back
+        //public static string FormatCaseNumber(string cn)
+        //{
+        //    string search = cn.Trim().ToUpper();
+        //    if (search == "")
+        //        return cn;  // nothing there, send it back
 
 
-            Regex re = new Regex(@"(.*)([DGJRTW]) *(\d*)/(\d*)(.*)");
-            Match found = re.Match(search);
-            if (!found.Success)
-                return cn;
+        //    Regex re = new Regex(@"(.*)([DGJRTW]) *(\d*)/(\d*)(.*)");
+        //    Match found = re.Match(search);
+        //    if (!found.Success)
+        //        return cn;
 
-            if (found.Groups[1].Value != "" || found.Groups[5].Value != "")
-                return cn;
+        //    if (found.Groups[1].Value != "" || found.Groups[5].Value != "")
+        //        return cn;
 
-            StringBuilder builder = new StringBuilder();
-            builder.Append(found.Groups[2].Value);
-            builder.Append(' ');
-            builder.Append(found.Groups[3].Value.PadLeft(4, '0'));
-            builder.Append('/');
-            builder.Append(found.Groups[4].Value);
+        //    StringBuilder builder = new StringBuilder();
+        //    builder.Append(found.Groups[2].Value);
+        //    builder.Append(' ');
+        //    builder.Append(found.Groups[3].Value.PadLeft(4, '0'));
+        //    builder.Append('/');
+        //    builder.Append(found.Groups[4].Value);
 
-            return builder.ToString();
-        }
+        //    return builder.ToString();
+        //}
 
     }
 }
